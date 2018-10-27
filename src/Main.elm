@@ -2,9 +2,12 @@ module Main exposing (main)
 
 import Rating exposing (..)
 import Browser
-import Html exposing (Html, button, div, h1, input, text)
-import Html.Attributes exposing (placeholder, value)
-import Html.Events exposing (onClick, onInput)
+import Html exposing (Html)
+import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Input as Input
+import Element.Font as Font
 
 
 type alias Model =
@@ -43,26 +46,50 @@ update msg model =
             { model | comment = newText }
 
 
+button : Msg -> String -> Element Msg
+button msg label =
+    Input.button
+        [ Border.width 2
+        , Border.color <| rgb 0.9 0.9 0.9
+        , Border.rounded 5
+        , centerX
+        , padding 5
+        ]
+        { onPress = Just msg
+        , label = text label
+        }
+
+
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 [] [ text "★ Rate it! ☆" ]
-        , button [ onClick Increment ] [ text "+1" ]
-        , div []
-            [ text <| Rating.toStars model.rating
-            , text model.comment
+    layout [] <|
+        column
+            [ padding 20
+            , spacing 10
+            , centerX
+            , centerY
             ]
-        , button [ onClick Decrement ] [ text "-1" ]
-        , div [] [ button [ onClick Reset ] [ text "Reset" ] ]
-        , div []
-            [ input
-                [ placeholder "Enter comment..."
-                , value model.comment
-                , onInput CommentChange
-                ]
-                []
+            [ el [ Font.size 30, centerX ] <|
+                text "★ Rate it! ☆"
+            , button Increment "+"
+            , el [ centerX ] <|
+                Rating.reviewElement model
+            , button Decrement "-"
+            , button Reset "Reset"
+            , Input.text []
+                { onChange = \s -> CommentChange s
+                , text = model.comment
+                , placeholder =
+                    Just <|
+                        Input.placeholder
+                            [ centerX
+                            , width shrink
+                            ]
+                        <|
+                            text "Enter comment..."
+                , label = Input.labelHidden "Comment:"
+                }
             ]
-        ]
 
 
 main : Program () Model Msg
