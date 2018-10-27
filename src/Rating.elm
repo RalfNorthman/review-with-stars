@@ -69,10 +69,14 @@ reviewElement { rating, comment } =
         starsAttributes =
             [ Background.color charcoal
             , Font.color yellow
-            , Border.rounded 8
+            , Border.roundEach
+                { topLeft = 8
+                , topRight = 8
+                , bottomLeft = 0
+                , bottomRight = 0
+                }
             , paddingXY 5 2
             , centerX
-            , moveDown 10
             ]
 
         starsElement =
@@ -83,17 +87,15 @@ reviewElement { rating, comment } =
             , Font.color yellow
             , width (shrink |> minimum 140)
             , paddingXY 8 5
-            , Border.rounded 10
-            , Border.width 1
+            , Border.rounded 8
             , padding 10
             , centerX
-            , above starsElement
             ]
 
         commentElement =
             el commentAttributes <| el [ centerX ] <| text comment
     in
-        column []
+        column [ spacing -3 ]
             [ starsElement
             , commentElement
             ]

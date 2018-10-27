@@ -54,9 +54,10 @@ button msg label =
         , Border.rounded 5
         , centerX
         , padding 5
+        , width (shrink |> minimum 30)
         ]
         { onPress = Just msg
-        , label = text label
+        , label = el [ centerX ] <| text label
         }
 
 
